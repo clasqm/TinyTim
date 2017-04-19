@@ -1,0 +1,37 @@
+
+//Yabadabbadoo notification
+########DO NOT RENAME THIS FILE!########
+//Yabadabbadoo needs it to function.
+
+//Main Message Loop
+dim msg$(1)
+while(not leavingLoop)
+	nCommands = token(message$, msg$(), "|")
+	for everyCommand = 1 to nCommands
+		if(DEBUG and msg$(everyCommand)<>"") print msg$(everyCommand)
+		switch(msg$(everyCommand))
+			case "_QuitRequested":
+			case "MainWindow:_QuitRequested":
+				leavingLoop = true
+				break
+			case "aboutButton"
+				Alert ProgramName$ + " " + ProgramVersion$ + "\n" + "by " + AuthorName$ +"\n\n" + ProgramBriefDescription$ + "\n\n" + ProgramLicense$, "OK", "none"
+				break
+			case "tinyurlButton":
+				spin = true
+				Launchsurl$()
+				spin=false
+				break
+			case "copyButton":
+				Copy2Clipboard()
+				break
+			default:
+				break
+		end switch
+	next everyCommand
+wend
+
+CloseWindow()
+
+end
+

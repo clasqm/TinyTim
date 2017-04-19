@@ -1,0 +1,12 @@
+sub ExamineClipboard()
+	//this should only happen at program launch
+	//if you wish to add an "insert from clipboard" function later
+	//it will require a TEXTEDIT CLEAR. But rightclick works so why bother?
+	local clipcontent$
+	clipcontent$ = clipboard paste$
+	if (left$(clipcontent$, 4) = "www.") or (left$(clipcontent$, 5) = "http:") then
+		textedit add "URLField", clipcontent$
+		LongURL$ = clipcontent$ // not strictly necessary, but better to play safe	
+	endif
+end sub
+

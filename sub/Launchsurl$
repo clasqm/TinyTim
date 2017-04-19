@@ -1,0 +1,22 @@
+sub Launchsurl$()
+	local dothis$
+	display_spinner("DuringCurl") 
+	for f = 1 to 10:spinall():next f
+	LongURL$ = textedit get$ "URLField"
+	for f = 1 to 10:spinall():next f
+	if CheckLongURL()= 0 then
+		hide_spinner("DuringCurl")
+		return
+	endif
+	UIOnOff(0)
+	for f = 1 to 10:spinall():next f
+	dothis$ = "curl 'http://tinyurl.com/api-create.php?url=" + LongURL$ +"'"
+	ShortURL$ = system$(dothis$)
+	for f = 1 to 10:spinall():next f
+	DisplayShortURL()
+	for f = 1 to 10:spinall():next f
+	UIOnOff(1)
+	for f = 1 to 10:spinall():next f
+	hide_spinner("DuringCurl")
+end sub
+

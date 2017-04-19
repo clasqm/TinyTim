@@ -1,0 +1,47 @@
+#!yab4ybd
+################################
+############# Prologue #############
+################################
+
+//Yabadabbadoo notification
+########DO NOT RENAME THIS FILE!########
+//Yabadabbadoo needs it to function.
+ 
+##Fill in these fields with your own particulars.
+##The variables will be used in the About Box and in naming the program.
+ 
+ProgramName$ = "TinyTim"
+AuthorName$ = "Michel Clasquin-Johnson <clasqm@gmail.com>"
+ProgramVersion$ = "V0.1"
+ProgramBriefDescription$ = "TinyTim allows you to send a long URL to tinyurl.com and copy the resulting short URL to the clipboard."
+ProgramLicense$ = "Public Domain"
+ 
+//*************************
+//*****Global Variables****
+//*************************
+ 
+## Technically, yab does not require you to declare global variables,
+##It just is a really, really good idea to do it anyway.
+// set DEBUG = 1 to print out all messages on the console
+DEBUG = 0
+//change this to DEBUG = 0 when you are ready to bind the program for distribution
+ 
+LongURL$=""
+ShortURL$="Shortened URL will appear here after conversion"
+ 
+##########################
+######Preliminary Commands#####
+##########################
+
+## Commands to run before the Main Loop come here.
+## e.g. setting up a window with a menu.
+ 
+import spinner 
+ 
+OpenWindow()
+
+ 
+ 
+ 
+#######End of Prologue#######
+

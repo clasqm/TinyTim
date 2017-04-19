@@ -1,0 +1,5 @@
+sub Copy2Clipboard()
+	if ShortURL$ = "" return
+	clipboard copy ShortURL$
+end sub
+

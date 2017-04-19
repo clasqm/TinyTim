@@ -1,0 +1,16 @@
+sub CheckLongURL()
+	if  LongURL$ = "" then
+		Alert "Please enter a long URL first", "OK", "warning"
+		return 0
+	end if
+	If (left$(LongURL$, 4)<>"www.") and (left$(LongURL$, 5) <> "http:") then
+		alert "Is this a valid URL? Please start your URL with www or http. URLs are case sensitive and with no tabs, spaces or trailing lines, please", "OK", "warning"
+		return 0
+	endif
+	if instr(LongURL$, "\n") <> 0 then
+	alert "There is an open line or more than one line in your long URL (possibly at the end, did you press ENTER?) Please remove it.", "OK", "warning"
+		return 0
+	endif
+	return 1
+end sub
+

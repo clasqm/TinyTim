@@ -1,0 +1,30 @@
+sub OpenWindow()
+	//Setup the main window here
+	window open 100,100 to 500,280, "MainWindow", ProgramName$
+	window set "MainWindow", "look", "floating"
+	window set "MainWindow", "feel", "modal-app"
+	window set "MainWindow", "flags","not-zoomable"
+	window set "MainWindow", "flags","not-resizable"
+	text 10,25 to 49,40, "URLlabel", "URL:", "MainWindow"
+	text 10,68 to 52,88, "Submitlabel", "Submit", "MainWindow"
+	text 10,105 to 59,125, "Resultslabel", "Result:", "MainWindow"
+	
+	draw rect  70,10 to 390,50, "MainWindow"
+	Textedit 71,11 to 389,49, "URLField", 0,"MainWindow"
+	Button 70, 60 to 390, 90, "tinyurlButton", "Submit this URL to tinyurl.com", "MainWindow"
+	
+	View 70, 100 to 390, 130, "ShortURLView", "MainWindow"
+	view 10,147 to 62,165, "SpinnerView", "MainWindow"
+	
+	new_spinner(1,1,15,50, "DuringCurl", "SpinnerView")
+	
+	
+	Button 70, 140 to 280, 170, "copyButton", "Copy to clipboard", "MainWindow"
+	option set "copyButton", "enabled", 0 //don't need this until we have a short URL
+	Button 290, 140 to 390, 170, "aboutButton", "About", "MainWindow"
+	
+	DisplayShortURL()
+	
+	ExamineClipboard()
+end sub
+

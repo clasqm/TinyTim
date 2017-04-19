@@ -1,0 +1,191 @@
+#!yab4ybd
+################################
+############# Prologue #############
+################################
+
+//Yabadabbadoo notification
+########DO NOT RENAME THIS FILE!########
+//Yabadabbadoo needs it to function.
+ 
+##Fill in these fields with your own particulars.
+##The variables will be used in the About Box and in naming the program.
+ 
+ProgramName$ = "TinyTim"
+AuthorName$ = "Michel Clasquin-Johnson <clasqm@gmail.com>"
+ProgramVersion$ = "V0.1"
+ProgramBriefDescription$ = "TinyTim allows you to send a long URL to tinyurl.com and copy the resulting short URL to the clipboard."
+ProgramLicense$ = "Public Domain"
+ 
+//*************************
+//*****Global Variables****
+//*************************
+ 
+## Technically, yab does not require you to declare global variables,
+##It just is a really, really good idea to do it anyway.
+// set DEBUG = 1 to print out all messages on the console
+DEBUG = 0
+//change this to DEBUG = 0 when you are ready to bind the program for distribution
+ 
+LongURL$=""
+ShortURL$="Shortened URL will appear here after conversion"
+ 
+##########################
+######Preliminary Commands#####
+##########################
+
+## Commands to run before the Main Loop come here.
+## e.g. setting up a window with a menu.
+ 
+import spinner 
+ 
+OpenWindow()
+
+ 
+ 
+ 
+#######End of Prologue#######
+
+
+//Yabadabbadoo notification
+########DO NOT RENAME THIS FILE!########
+//Yabadabbadoo needs it to function.
+
+//Main Message Loop
+dim msg$(1)
+while(not leavingLoop)
+	nCommands = token(message$, msg$(), "|")
+	for everyCommand = 1 to nCommands
+		if(DEBUG and msg$(everyCommand)<>"") print msg$(everyCommand)
+		switch(msg$(everyCommand))
+			case "_QuitRequested":
+			case "MainWindow:_QuitRequested":
+				leavingLoop = true
+				break
+			case "aboutButton"
+				Alert ProgramName$ + " " + ProgramVersion$ + "\n" + "by " + AuthorName$ +"\n\n" + ProgramBriefDescription$ + "\n\n" + ProgramLicense$, "OK", "none"
+				break
+			case "tinyurlButton":
+				spin = true
+				Launchsurl$()
+				spin=false
+				break
+			case "copyButton":
+				Copy2Clipboard()
+				break
+			default:
+				break
+		end switch
+	next everyCommand
+wend
+
+CloseWindow()
+
+end
+
+sub CheckLongURL()
+	if  LongURL$ = "" then
+		Alert "Please enter a long URL first", "OK", "warning"
+		return 0
+	end if
+	If (left$(LongURL$, 4)<>"www.") and (left$(LongURL$, 5) <> "http:") then
+		alert "Is this a valid URL? Please start your URL with www or http. URLs are case sensitive and with no tabs, spaces or trailing lines, please", "OK", "warning"
+		return 0
+	endif
+	if instr(LongURL$, "\n") <> 0 then
+	alert "There is an open line or more than one line in your long URL (possibly at the end, did you press ENTER?) Please remove it.", "OK", "warning"
+		return 0
+	endif
+	return 1
+end sub
+
+sub CloseWindow()
+	//Close down the main window
+	window close "MainWindow"
+end sub
+
+sub Copy2Clipboard()
+	if ShortURL$ = "" return
+	clipboard copy ShortURL$
+end sub
+
+sub DisplayShortURL()
+	draw flush "ShortURLView"
+	Draw text 0,20, ShortURL$, "ShortURLView"
+end sub
+
+sub ExamineClipboard()
+	//this should only happen at program launch
+	//if you wish to add an "insert from clipboard" function later
+	//it will require a TEXTEDIT CLEAR. But rightclick works so why bother?
+	local clipcontent$
+	clipcontent$ = clipboard paste$
+	if (left$(clipcontent$, 4) = "www.") or (left$(clipcontent$, 5) = "http:") then
+		textedit add "URLField", clipcontent$
+		LongURL$ = clipcontent$ // not strictly necessary, but better to play safe	
+	endif
+end sub
+
+sub Launchsurl$()
+	local dothis$
+	display_spinner("DuringCurl") 
+	for f = 1 to 10:spinall():next f
+	LongURL$ = textedit get$ "URLField"
+	for f = 1 to 10:spinall():next f
+	if CheckLongURL()= 0 then
+		hide_spinner("DuringCurl")
+		return
+	endif
+	UIOnOff(0)
+	for f = 1 to 10:spinall():next f
+	dothis$ = "curl 'http://tinyurl.com/api-create.php?url=" + LongURL$ +"'"
+	ShortURL$ = system$(dothis$)
+	for f = 1 to 10:spinall():next f
+	DisplayShortURL()
+	for f = 1 to 10:spinall():next f
+	UIOnOff(1)
+	for f = 1 to 10:spinall():next f
+	hide_spinner("DuringCurl")
+end sub
+
+sub OpenWindow()
+	//Setup the main window here
+	window open 100,100 to 500,280, "MainWindow", ProgramName$
+	window set "MainWindow", "look", "floating"
+	window set "MainWindow", "feel", "modal-app"
+	window set "MainWindow", "flags","not-zoomable"
+	window set "MainWindow", "flags","not-resizable"
+	text 10,25 to 49,40, "URLlabel", "URL:", "MainWindow"
+	text 10,68 to 52,88, "Submitlabel", "Submit", "MainWindow"
+	text 10,105 to 59,125, "Resultslabel", "Result:", "MainWindow"
+	
+	draw rect  70,10 to 390,50, "MainWindow"
+	Textedit 71,11 to 389,49, "URLField", 0,"MainWindow"
+	Button 70, 60 to 390, 90, "tinyurlButton", "Submit this URL to tinyurl.com", "MainWindow"
+	
+	View 70, 100 to 390, 130, "ShortURLView", "MainWindow"
+	view 10,147 to 62,165, "SpinnerView", "MainWindow"
+	
+	new_spinner(1,1,15,50, "DuringCurl", "SpinnerView")
+	
+	
+	Button 70, 140 to 280, 170, "copyButton", "Copy to clipboard", "MainWindow"
+	option set "copyButton", "enabled", 0 //don't need this until we have a short URL
+	Button 290, 140 to 390, 170, "aboutButton", "About", "MainWindow"
+	
+	DisplayShortURL()
+	
+	ExamineClipboard()
+end sub
+
+sub UIOnOff(state)
+	//state must be 1 or 0
+	option set "tinyurlButton", "enabled", state 
+	option set "copyButton", "enabled", state 
+	option set "aboutButton", "enabled", state 
+end sub
+
+########################################
+###DATA statements, if any, come here###
+########################################
+
+

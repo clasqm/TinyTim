@@ -1,0 +1,5 @@
+sub DisplayShortURL()
+	draw flush "ShortURLView"
+	Draw text 0,20, ShortURL$, "ShortURLView"
+end sub
+
